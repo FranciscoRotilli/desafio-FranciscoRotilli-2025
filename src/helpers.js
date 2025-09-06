@@ -7,19 +7,19 @@ export class Animal {
 }
 
 export class Pessoa {
-  constructor(brinquedos, adotados) {
+  constructor(nome, brinquedos, adotados) {
+    this.nome = nome
     this.brinquedos = brinquedos
     this.adotados = adotados
   }
 }
 
-const brinquedosValidos = ['RATO', 'BOLA', 'LASER', 'CAIXA', 'NOVELO', 'SKATE']
+export function validaBrinquedos(brinquedos) {
+  const brinquedosValidos = ['RATO', 'BOLA', 'LASER', 'CAIXA', 'NOVELO', 'SKATE']
+  let validos = brinquedos.every(brinquedo => brinquedosValidos.includes(brinquedo.nome))
+  let unicos = new Set(brinquedos.map(b => b.nome)).size == brinquedos.length
 
-export function brinquedosValidosEUnicos(brinquedos) {
-  let validos = brinquedos.every(brinquedo => brinquedosValidos.includes(brinquedo))
-  let unicos = new Set(brinquedos).size == brinquedos.length
-
-  return validos && unicos
+  return (validos && unicos)
 }
 
 export function podeAdotar(pessoa, animal) {
@@ -39,7 +39,6 @@ export function podeAdotar(pessoa, animal) {
   }
 
   let indexBrinquedoAnimal = 0
-
   for (let i = 0; i < brinquedosPessoa.length; i++) {
     if (brinquedosPessoa[i] == brinquedosAnimal[indexBrinquedoAnimal]) {
       indexBrinquedoAnimal++
@@ -49,3 +48,16 @@ export function podeAdotar(pessoa, animal) {
   return false
 }
 
+export function adotaAnimal(pessoa, animal) {
+  pessoa.adotados++
+  if (animal.especie === 'gato') {
+    animal.ordemBrinquedos.forEach(brinquedoNome => {
+      pessoa.brinquedos = pessoa.brinquedos.filter(br => br.nome !== brinquedoNome)
+    })
+  } else {
+    animal.ordemBrinquedos.forEach(brinquedoNome => {
+      const brinquedo = pessoa.brinquedos.find(br => br.nome === brinquedoNome)
+      if (brinquedo) brinquedo.usado = true
+    })
+  }
+}

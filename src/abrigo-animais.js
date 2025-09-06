@@ -1,4 +1,4 @@
-import { Animal, brinquedosValidosEUnicos, Pessoa, podeAdotar } from './helpers'
+import { Animal, validaBrinquedos, Pessoa, podeAdotar, adotaAnimal } from './helpers'
 
 class AbrigoAnimais {
 
@@ -6,8 +6,8 @@ class AbrigoAnimais {
     let lista = []
     let brinquedosP1 = brinquedosPessoa1.split(',').map(brinquedo => ({nome: brinquedo, usado: false}))
     let brinquedosP2 = brinquedosPessoa2.split(',').map(brinquedo => ({nome: brinquedo, usado: false}))
-    let pessoa1 = new Pessoa(brinquedosP1, 0)
-    let pessoa2 = new Pessoa(brinquedosP2, 0)
+    let pessoa1 = new Pessoa('pessoa 1', brinquedosP1, 0)
+    let pessoa2 = new Pessoa('pessoa 2', brinquedosP2, 0)
 
     const animais = ordemAnimais.split(',')
 
@@ -21,29 +21,20 @@ class AbrigoAnimais {
       new Animal('Loco', 'jabuti', ['SKATE', 'RATO'])
     ]
 
-    let nomesAnimaisValidos = []
-
-    animaisValidos.forEach(animal => {
-      nomesAnimaisValidos.push(animal.nome)
-    });
-
+    let nomesAnimaisValidos = animaisValidos.map(a => a.nome)
     const animaisSaoValidos = animais.every(animal => nomesAnimaisValidos.includes(animal))
     const animaisSaoUnicos = new Set(animais).size == animais.length
-
     if (!animaisSaoValidos || !animaisSaoUnicos) {
       return { erro: 'Animal inválido' }
     }
 
-    const nomesBrinquedosP1 = brinquedosP1.map(b => b.nome)
-    const nomesBrinquedosP2 = brinquedosP2.map(b => b.nome)
-
-    if (!brinquedosValidosEUnicos(nomesBrinquedosP1) || !brinquedosValidosEUnicos(nomesBrinquedosP2)) {
+    if (!validaBrinquedos(brinquedosP1) || !validaBrinquedos(brinquedosP2)) {
       return { erro: 'Brinquedo inválido' }
     }
 
     for (const nomeAnimal of animais) {
       if (nomeAnimal === 'Loco' && animais.length === 1) {
-        lista.push(`${nomeAnimal} - abrigo`)
+        lista.push('Loco - abrigo')
         continue
       }
 
@@ -58,31 +49,11 @@ class AbrigoAnimais {
         lista.push(`${nomeAnimal} - abrigo`)
         continue
       } else if (pessoa1pode) {
+        adotaAnimal(pessoa1, animal)
         destino = 'pessoa 1'
-        pessoa1.adotados++
-        if (animal.especie === 'gato') {
-          animal.ordemBrinquedos.forEach(brinquedoNome => {
-            pessoa1.brinquedos = pessoa1.brinquedos.filter(br => br.nome !== brinquedoNome)
-          })
-        } else {
-          animal.ordemBrinquedos.forEach(brinquedoNome => {
-            const brinquedo = pessoa1.brinquedos.find(br => br.nome === brinquedoNome)
-            if (brinquedo) brinquedo.usado = true
-          })
-        }
       } else if (pessoa2pode) {
+        adotaAnimal(pessoa2, animal)
         destino = 'pessoa 2'
-        pessoa2.adotados++
-        if (animal.especie === 'gato') {
-          animal.ordemBrinquedos.forEach(brinquedoNome => {
-            pessoa2.brinquedos = pessoa2.brinquedos.filter(br => br.nome !== brinquedoNome)
-          })
-        } else {
-          animal.ordemBrinquedos.forEach(brinquedoNome => {
-            const brinquedo = pessoa2.brinquedos.find(br => br.nome === brinquedoNome)
-            if (brinquedo) brinquedo.usado = true
-          })
-        }
       }
       lista.push(`${nomeAnimal} - ${destino}`)
     }

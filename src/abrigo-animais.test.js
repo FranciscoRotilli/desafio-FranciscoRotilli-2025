@@ -57,12 +57,22 @@ describe('Abrigo de Animais', () => {
     expect(resultado.lista).toBeFalsy();
   });
 
-  test('Gatos não devem dividir brinquedos', () => {
+  test('Gatos tem uso exclusivo dos seus brinquedos', () => {
     const resultado = new AbrigoAnimais().encontraPessoas(
-      'BOLA,LASER,RATO', 'CAIXA,NOVELO', 'Mimi,Zero');
-    expect(resultado.lista[0]).toBe('Mimi - pessoa 1');
-    expect(resultado.lista[1]).toBe('Zero - abrigo');
+      'LASER,RATO,BOLA', 'CAIXA,NOVELO', 'Zero,Bebe');
+    expect(resultado.lista[0]).toBe('Bebe - abrigo');
+    expect(resultado.lista[1]).toBe('Zero - pessoa 1');
     expect(resultado.lista.length).toBe(2);
+    expect(resultado.erro).toBeFalsy();
+  });
+
+  test('Gatos não aceitam dividir brinquedos', () => {
+    const resultado = new AbrigoAnimais().encontraPessoas(
+      'LASER,RATO,BOLA', 'CAIXA,NOVELO', 'Bebe,Zero,Rex');
+    expect(resultado.lista[0]).toBe('Bebe - pessoa 1');
+    expect(resultado.lista[1]).toBe('Rex - pessoa 1');
+    expect(resultado.lista[2]).toBe('Zero - abrigo');
+    expect(resultado.lista.length).toBe(3);
     expect(resultado.erro).toBeFalsy();
   });
 
