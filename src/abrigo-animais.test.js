@@ -155,4 +155,16 @@ describe('Abrigo de Animais', () => {
     expect(resultado.lista[1]).toBe('Zero - pessoa 2');
     expect(resultado.erro).toBeFalsy();
   });
+
+  test('Tipo de entrada inválida de brinquedos deve gerar erro', () => {
+    const resultado = new AbrigoAnimais().encontraPessoas(
+      1, 2, 'teste');
+      expect(resultado.erro).toBe('Brinquedo inválido')
+  });
+
+  test('Tipo de entrada inválida de animais deve gerar erro', () => {
+    const resultado = new AbrigoAnimais().encontraPessoas(
+      'teste', 'teste', 0);
+      expect(resultado.erro).toBe('Animal inválido')
+  });
 });

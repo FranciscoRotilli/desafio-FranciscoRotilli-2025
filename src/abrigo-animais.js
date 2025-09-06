@@ -3,6 +3,8 @@ import { Animal, validaBrinquedos, Pessoa, podeAdotar, adotaAnimal } from './hel
 class AbrigoAnimais {
 
   encontraPessoas(brinquedosPessoa1, brinquedosPessoa2, ordemAnimais) {
+    if (typeof brinquedosPessoa1 !== 'string' || typeof brinquedosPessoa2 !== 'string') return { erro: 'Brinquedo inválido' }
+    if (typeof ordemAnimais !== 'string') return { erro: 'Animal inválido' }
     let lista = []
     let brinquedosP1 = brinquedosPessoa1.split(',').map(brinquedo => ({nome: brinquedo, usado: false}))
     let brinquedosP2 = brinquedosPessoa2.split(',').map(brinquedo => ({nome: brinquedo, usado: false}))
